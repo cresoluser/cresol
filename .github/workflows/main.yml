@@ -9,19 +9,26 @@ jobs:
       - uses: actions/checkout@v2
       # Add steps here to set up PHP, install dependencies, and run tests if applicable
 
- 
-
   deploy_to_prod:
-    
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Git to use the token
         run: |
           git config user.name "cresoluser"
-          git config user.email "cresoluser@gmail.com"
+          git config user.email ":cresoluser@gmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/cresol.git
       - name: Push to Production Branch
         run: |
           git checkout -b production
           git push -f origin production
+
+      - name: FTP Deploy Action
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USER }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./  # If your whole repo should be uploaded
+          remote-dir: /public_html/cresol/  # Your FTP path
+          git-ftp-args: --insecure  # Use this if your FTP server does not support FTPS
