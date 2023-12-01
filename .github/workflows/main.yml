@@ -26,9 +26,9 @@ jobs:
       - name: FTP Deploy Action
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-          ftp-server: ${{ secrets.FTP_SERVER }}
-          ftp-username: ${{ secrets.FTP_USER }}
-          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./  # If your whole repo should be uploaded
-          remote-dir: /public_html/cresol/  # Your FTP path
-          git-ftp-args: --insecure  # Use this if your FTP server does not support FTPS
+          server-dir: /public_html/cresol/  # Your FTP path
+          
