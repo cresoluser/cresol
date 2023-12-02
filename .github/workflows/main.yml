@@ -34,7 +34,7 @@ jobs:
           server-dir: /dev/  # Your FTP path
 
 
-   deploy_to_prod:
+deploy_to_prod:
     runs-on: ubuntu-latest
     needs: test
     steps:
