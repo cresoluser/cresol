@@ -3,8 +3,8 @@ name: PHP CI/CD Workflow
 on: 
   push:
     branches:
-      - dev
-      - prod
+      - dev1
+      - prod1
 
 jobs:
   deploy:
@@ -17,13 +17,13 @@ jobs:
           git config user.name "cresoluser"
           git config user.email "cresoluser@gmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/dev.git
-      - name: Push to Dev Branch
+      - name: Push to dev Branch
         run: |
-         git checkout -b dev
-          git push -f origin dev
+         git checkout -b dev1
+          git push -f origin dev1
           
-      - name: FTP Deploy to Dev
-        if: github.ref == 'refs/heads/dev'
+      - name: FTP Deploy to dev
+        if: github.ref == 'refs/heads/dev1'
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -32,11 +32,11 @@ jobs:
           local-dir: ./  
           server-dir: /dev
       - name: Setup Deployment
-        if: github.ref == 'refs/heads/prod'
+        if: github.ref == 'refs/heads/prod1'
         run: |
          
       - name: FTP Deploy to Production
-        if: github.ref == 'refs/heads/prod'
+        if: github.ref == 'refs/heads/prod1'
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_SERVER }}
