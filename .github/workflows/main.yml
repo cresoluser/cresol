@@ -21,7 +21,7 @@ jobs:
         run: |
          git checkout -b dev
           git push -f origin dev
-          # Setup for Dev Deployment
+          
       - name: FTP Deploy to Dev
         if: github.ref == 'refs/heads/dev'
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
@@ -34,7 +34,7 @@ jobs:
       - name: Setup Deployment
         if: github.ref == 'refs/heads/prod'
         run: |
-          # Setup for Production Deployment
+         
       - name: FTP Deploy to Production
         if: github.ref == 'refs/heads/prod'
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
