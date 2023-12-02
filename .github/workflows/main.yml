@@ -1,6 +1,10 @@
 name: PHP CI/CD Workflow
 
-on: [push]
+on: 
+  push:
+    branches:
+      - Dev
+      - production
 
 jobs:
   test:
@@ -10,27 +14,47 @@ jobs:
       # Add steps here to set up PHP, install dependencies, and run tests if applicable
 
   deploy_to_dev:
+    if: github.ref == 'refs/heads/Dev'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Git to use the token
+      - name: Set up Git for Dev Branch
         run: |
-          git config user.name "cresoluser"
-          git config user.email ":cresoluser@gmail.com"
-          git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/dev.git
-      - name: Push to development Branch
+          git config user.name "YourUserName"
+          git config user.email "mailto:youremail@example.com"
+          git remote set-url origin https://x-access-token:${{ secrets.CICD_DEV }}@github.com/YourUserName/dev.git
+      - name: Push to Dev Branch
         run: |
-          git checkout -b dev
-          git push -f origin dev
-
+          git checkout -b Dev
+          git push -f origin Dev
       - name: FTP Deploy Action To Dev
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-          if: "github.event_name == 'push' && github.ref == 'refs/heads/dev'"
+          server: ${{ secrets.FTP_SERVER_DEV }}
+          username: ${{ secrets.FTP_USER_DEV }}
+          password: ${{ secrets.FTP_PASSWORD_DEV }}
+          local-dir: ./  # If your whole repo should be uploaded
+          server-dir: /dev/  # Your FTP path for Dev
+
+  deploy_to_prod:
+    if: github.ref == 'refs/heads/production'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Git for Prod Branch
+        run: |
+          git config user.name "cresoluser"
+          git config user.email "mailto:cresoluser@gmail.com"
+          git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/prod.git
+      - name: Push to Prod Branch
+        run: |
+          git checkout -b prod
+          git push -f origin prod
+      - name: FTP Deploy Action To Prod
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./  # If your whole repo should be uploaded
-          server-dir: /dev/  # Your FTP path
-
-
+          server-dir: /prod/  # Your FTP path for Prod
