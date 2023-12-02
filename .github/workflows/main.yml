@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - dev
-      - prod
+      
 
 jobs:
   test:
@@ -31,19 +31,4 @@ jobs:
           local-dir: ./  # If your whole repo should be uploaded
           server-dir: /dev/  # Your FTP path
 
-  deploy_to_prod:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: FTP Deploy Action To prod
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
-        with:
-          if: "github.event_name == 'push' && github.ref == 'refs/heads/prod'"
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./  # If your whole repo should be uploaded
-          server-dir: /prod/  # Your FTP path
+ 
