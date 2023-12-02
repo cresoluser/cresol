@@ -19,7 +19,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/dev.git
       - name: Push to Dev Branch
         run: |
-         
+         git checkout -b dev
           git push -f origin dev
           # Setup for Dev Deployment
       - name: FTP Deploy to Dev
