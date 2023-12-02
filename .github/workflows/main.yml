@@ -27,6 +27,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           if: "github.event_name == 'push' && github.ref == 'refs/heads/dev'"
+          run: echo "This step runs for dev branch pushes."
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
@@ -37,6 +38,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           if: "github.event_name == 'push' && github.ref == 'refs/heads/prod'"
+          run: echo "This step runs for prod branch pushes."
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
