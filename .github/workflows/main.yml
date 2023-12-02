@@ -17,7 +17,7 @@ jobs:
         run: |
           git config user.name "cresoluser"
           git config user.email ":cresoluser@gmail.com"
-          git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/cresol.git
+          git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/dev.git
       - name: Push to development Branch
         run: |
           git checkout -b dev
