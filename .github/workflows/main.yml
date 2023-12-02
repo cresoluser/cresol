@@ -7,54 +7,40 @@ on:
       - production
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # Add steps here to set up PHP, install dependencies, and run tests if applicable
-
-  deploy_to_dev:
-    if: github.ref == 'refs/heads/Dev'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Git for Dev Branch
-        run: |
-          git config user.name "YourUserName"
-          git config user.email "mailto:youremail@example.com"
-          git remote set-url origin https://x-access-token:${{ secrets.CICD_DEV }}@github.com/YourUserName/dev.git
-      - name: Push to Dev Branch
-        run: |
-          git checkout -b Dev
-          git push -f origin Dev
-      - name: FTP Deploy Action To Dev
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
-        with:
-          server: ${{ secrets.FTP_SERVER_DEV }}
-          username: ${{ secrets.FTP_USER_DEV }}
-          password: ${{ secrets.FTP_PASSWORD_DEV }}
-          local-dir: ./  # If your whole repo should be uploaded
-          server-dir: /dev/  # Your FTP path for Dev
-
-  deploy_to_prod:
-    if: github.ref == 'refs/heads/production'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Git for Prod Branch
+      - name: Setup Deployment
+        if: github.ref == 'refs/heads/dev'
         run: |
           git config user.name "cresoluser"
-          git config user.email "mailto:cresoluser@gmail.com"
-          git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/prod.git
-      - name: Push to Prod Branch
+          git config user.email "cresoluser@gmail.com"
+          git remote set-url origin https://x-access-token:${{ secrets.CICD }}@github.com/cresoluser/dev.git
+      - name: Push to Dev Branch
         run: |
-          git checkout -b prod
-          git push -f origin prod
-      - name: FTP Deploy Action To Prod
+          git checkout -b dev
+          git push -f origin dev
+          # Setup for Dev Deployment
+      - name: FTP Deploy to Dev
+        if: github.ref == 'refs/heads/dev'
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./  # If your whole repo should be uploaded
-          server-dir: /prod/  # Your FTP path for Prod
+          local-dir: ./  
+          server-dir: /dev
+      - name: Setup Deployment
+        if: github.ref == 'refs/heads/prod'
+        run: |
+          # Setup for Production Deployment
+      - name: FTP Deploy to Production
+        if: github.ref == 'refs/heads/prod'
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./  
+          server-dir: /prod
